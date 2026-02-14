@@ -13,4 +13,3 @@ def check_marks(mark):
     else:
         return "Invalid"
 
-# Example utility functions can be added here

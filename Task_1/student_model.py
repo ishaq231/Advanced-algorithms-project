@@ -1,13 +1,22 @@
 from utils import check_marks
 class Student:
-    def __init__(self,student_id,level_5_modules,level_6_modules):
+    def __init__(self,student_id):
         self.student_id = student_id
         self.level_5_modules = {}
+        self.level_5_average = 0
         self.level_6_modules = {}
+        self.level_6_average = 0
+        self.final_mark = 0
+        self.has_fail = False  # Flag to track if any module is failed
     def add_module(self,module,module_code,mark):
         module_code_split = module_code.split('-')
         credit = module_code_split[1]
         year = module_code_split[2]
+        
+        # Check if this module is a fail
+        if mark < 40:
+            self.has_fail = True
+        
         if year == '2':
             self.level_5_modules[module] = (int(credit),mark)
         elif year == '3':
@@ -15,47 +24,58 @@ class Student:
         #print(f"Level 5 Modules: {self.level_5_modules}")
         #print(f"Level 6 Modules: {self.level_6_modules}")
     def calculate_level_5_average(self):
-        # Group modules by credit value
-        modules_by_credit = {}
+        # Create a list of (mark, credit) tuples from all modules
+        modules_list = []
         for module, (credit, mark) in self.level_5_modules.items():
-            if credit not in modules_by_credit:
-                modules_by_credit[credit] = []
-            modules_by_credit[credit].append(mark)
+            if check_marks(mark) != "Invalid":  # Exclude invalid marks
+                modules_list.append((mark, credit))
         
-        # Sort each credit group by mark (descending)
-        for credit in modules_by_credit:
-            modules_by_credit[credit].sort(reverse=True)
+        # Sort by mark in descending order (highest marks first)
+        modules_list.sort(reverse=True, key=lambda x: x[0])
         
         total_credits = 0
         weighted_marks = []
         
-        # Strategy: Add best marks prioritizing 30-credit, then 15-credit
-        # Try to get as close to 100 as possible
-        
-        # First, add best 30-credit modules
-        if 30 in modules_by_credit:
-            for mark in modules_by_credit[30]:
-                if total_credits + 30 <= 100:
-                    if check_marks(mark) != "Invalid":
-                        total_credits += 30
-                        weighted_marks.append(mark * 30)
-        
-        # Then add best 15-credit modules
-        if 15 in modules_by_credit:
-            for mark in modules_by_credit[15]:
-                if total_credits + 15 <= 100:
-                    if check_marks(mark) != "Invalid":
-                        total_credits += 15
-                        weighted_marks.append(mark * 15)
-                        
-        if total_credits == 0:  # Avoid division by zero
-            return 0, 0
+        for mark, credit in modules_list:
+            if total_credits >= 100:
+                break
+            
+            # Check if adding this module would exceed 100 credits
+            if total_credits + credit <= 100:
+                # Add the full module
+                total_credits += credit
+                weighted_marks.append(mark * credit)
+            else:
+                # Add partial credits to reach exactly 100
+                remaining_credits = 100 - total_credits
+                total_credits += remaining_credits
+                # Use proportional weighted mark: mark * remaining_credits
+                weighted_marks.append(mark * remaining_credits)
+                break  # We've reached 100 credits
         average = sum(weighted_marks) / total_credits
-        return average, total_credits
-            
-                
-        
-            
+        self.level_5_average = average
         
     def calculate_level_6_average(self):
-        pass
+        modules_list = []
+        for module, (credit, mark) in self.level_6_modules.items():
+            if check_marks(mark) != "Invalid":  # Exclude invalid marks
+                modules_list.append((mark, credit))
+        
+        total_credits = 0
+        weighted_marks = []
+        
+        for mark, credit in modules_list:
+            # Add the full module
+            total_credits += credit
+            weighted_marks.append(mark * credit)
+        average = sum(weighted_marks) / total_credits
+        self.level_6_average = average
+    
+    def final_mark_calc(self):
+        # If student failed any module, they don't get a degree
+        if self.has_fail:
+            self.final_mark = 0
+            return 0
+        
+        final_mark = ((self.level_6_average * 3) + self.level_5_average)/4
+        self.final_mark = final_mark 
