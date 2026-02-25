@@ -8,24 +8,24 @@ modules_names_data= "Task_1/data/cs modules.csv"
 
 
 marks_data = data_read(filepath) # Call the data_read function to read the data from the specified CSV file.
-module_names = data_read(modules_names_data) # Call the data_read function to read the module names from the specified CSV file.
-if marks_data is not None and module_names is not None: # Check if both DataFrames were successfully read (not None).
+if marks_data is not None: # Check if DataFrame was successfully read (not None).
     marks_data = data_clean(marks_data) # Call the data_clean function to clean the DataFrame
-    module_names = data_clean(module_names) # Call the data_clean function to clean the module names DataFrame.
 #print(marks_data)  Print the cleaned DataFrame to the console.
-modules = get_module_names(module_names)
+# Read module names directly using optimized csv method
+modules = get_module_names(modules_names_data)
 print("Data read and cleaned successfully. Module names extracted.")
 
 # Open CSV file once and write incrementally
 with open('Task_1/student_results.csv', 'w', newline='') as csvfile:
-    fieldnames = ['Student ID', 'Level 5 Average', 'Level 6 Average', 'Final Grade']
+    fieldnames = ['Student ID', 'Level 5 Average', 'Level 6 Average', 'Final Grade', 'Final Mark', 'Modules Failed', 'level 5 Modules Used', 'level 6 Modules Used']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     
     # Write header once at the start
     writer.writeheader()
     
     # Process and write each student immediately
-    for index, row in marks_data.iterrows():
+    # itertuples() is much faster than iterrows() - 100x+ performance improvement
+    for row in marks_data.itertuples(index=False, name=None):
         student_id = row[0]
         # Create a new Student instance for this student
         student = Student(student_id)  
@@ -44,11 +44,19 @@ with open('Task_1/student_results.csv', 'w', newline='') as csvfile:
         student.final_mark_calc()
         
         # Write result immediately to file
+        # Format modules used with their marks: "Module Name (Mark%)"
+        level_5_modules_str = ", ".join([f"{mod} ({mark}%)" for mod, mark in student.level_5_modules_used.items()])
+        level_6_modules_str = ", ".join([f"{mod} ({mark}%)" for mod, mark in student.level_6_modules_used.items()])
+        
         writer.writerow({
             'Student ID': student_id,
-            'Level 5 Average': check_marks(student.level_5_average),
-            'Level 6 Average': check_marks(student.level_6_average),
+            'Level 5 Average': f"{round(student.level_5_average, 1)}%",
+            'Level 6 Average': f"{round(student.level_6_average, 1)}%",
             'Final Grade': check_marks(student.final_mark),
+            'Final Mark': round(student.final_mark, 1),
+            'Modules Failed': ", ".join(student.failed_modules) if student.has_fail else "None",
+            'level 5 Modules Used': level_5_modules_str,
+            'level 6 Modules Used': level_6_modules_str
         })
 
 print(f"\nResults saved to Task_1/student_results.csv")
