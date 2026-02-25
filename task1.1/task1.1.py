@@ -3,8 +3,8 @@ from utils import check_marks
 from student_model import Student
 import csv
 
-filepath = "Task_1/data/activity1_1_marks.csv"
-modules_names_data= "Task_1/data/cs modules.csv"
+filepath = "task1.1/data/activity1_1_marks.csv"
+modules_names_data= "task1.1/data/cs modules.csv"
 
 
 marks_data = data_read(filepath) # Call the data_read function to read the data from the specified CSV file.
@@ -16,7 +16,7 @@ modules = get_module_names(modules_names_data)
 print("Data read and cleaned successfully. Module names extracted.")
 
 # Open CSV file once and write incrementally
-with open('Task_1/student_results.csv', 'w', newline='') as csvfile:
+with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
     fieldnames = ['Student ID', 'Level 5 Average', 'Level 6 Average', 'Final Grade', 'Final Mark', 'Modules Failed', 'level 5 Modules Used', 'level 6 Modules Used']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     
