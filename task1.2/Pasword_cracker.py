@@ -12,7 +12,7 @@ num_set = set(num)
 special_chars_set = set(special_chars)
 valid_starts_set = set(valid_starts)
 
-password_length = int(input("Enter the length of the password to crack: "))
+password_length = int(input("Enter the length of the password to generate: "))
 max_pass = len(possible_chars) ** password_length
 
 
