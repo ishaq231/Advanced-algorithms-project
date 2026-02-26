@@ -29,11 +29,12 @@ def show_found_image(unknow_image):
 
 
 start = time.time()
+script_dir = os.path.dirname(os.path.abspath(__file__))
 # Load the known face image and get the features of the face
-known_image = face_recognition.load_image_file("dataset/task1_4/known_man.jpg")
+known_image = face_recognition.load_image_file(os.path.join(script_dir, "known_man.jpg"))
 known_encoding = face_recognition.face_encodings(known_image)[0]
 
-folder_path = "dataset/task1_4/imageset/"
+folder_path = os.path.join(script_dir, "imageset") + "/"
 filenames = [file.name for file in os.scandir(folder_path) if file.is_file()]
 
 for filename in filenames:
