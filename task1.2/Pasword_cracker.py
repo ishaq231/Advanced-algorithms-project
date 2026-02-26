@@ -40,10 +40,10 @@ with open("task1.2/possible_passwords.txt", "w") as file:
                     buffer.clear()
             return
           
-        for char in possible_chars:
-            if len(password_list) == 0 and char not in valid_starts_set:
-                continue
-                
+        # Choose the right character set based on position
+        chars_to_check = valid_starts_set if len(password_list) == 0 else possible_chars
+        
+        for char in chars_to_check:
             # Calculate new counts but DON'T reassign the loop variables
             new_cap = cap_count + (1 if char in cap_letters_set else 0)
             new_low = low_count + (1 if char in low_letters_set else 0)
