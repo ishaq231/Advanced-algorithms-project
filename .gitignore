@@ -1,3 +1,3 @@
-vemv
+venv/
 task1.2/possible_passwords.txt
-.venv
+.venv/
