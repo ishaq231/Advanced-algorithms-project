@@ -10,7 +10,6 @@ class Student:
         self.has_fail = False  # Flag to track if any module is failed
         self.failed_modules = []  # List to store failed modules (if needed)
         self.level_5_modules_used = {}  # Modules actually used for Level 5 (best 100 credits)
-        self.level_6_modules_used = {}  # Modules actually used for Level 6
     def add_module(self,module,module_code,mark):
         module_code_split = module_code.split('-')
         credit = module_code_split[1]
@@ -63,13 +62,11 @@ class Student:
         # Direct calculation without intermediate list - more memory efficient
         total_credits = 0
         weighted_sum = 0
-        self.level_6_modules_used = {}  # Reset the modules used
         
         for module, (credit, mark) in self.level_6_modules.items():
             if 0 <= mark <= 100:  # Exclude invalid marks
                 total_credits += credit
                 weighted_sum += mark * credit
-                self.level_6_modules_used[module] = mark
         
         self.level_6_average = weighted_sum / total_credits if total_credits > 0 else 0
     

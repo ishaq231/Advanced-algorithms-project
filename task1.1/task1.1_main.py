@@ -17,7 +17,7 @@ print("Data read and cleaned successfully. Module names extracted.")
 
 # Open CSV file once and write incrementally
 with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
-    fieldnames = ['Student ID', 'Level 5 Average', 'Level 6 Average', 'Final Grade', 'Final Mark', 'Modules Failed', 'level 5 Modules Used', 'level 6 Modules Used']
+    fieldnames = ['Student ID', 'Level 5 Average', 'Level 6 Average', 'Final Grade', 'Final Mark', 'Modules Failed', 'level 5 Modules Used']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     
     # Write header once at the start
@@ -46,7 +46,6 @@ with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
         # Write result immediately to file
         # Format modules used with their marks: "Module Name (Mark%)"
         level_5_modules_str = ", ".join([f"{mod} ({mark}%)" for mod, mark in student.level_5_modules_used.items()])
-        level_6_modules_str = ", ".join([f"{mod} ({mark}%)" for mod, mark in student.level_6_modules_used.items()])
         
         writer.writerow({
             'Student ID': student_id,
@@ -56,7 +55,6 @@ with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
             'Final Mark': round(student.final_mark, 1),
             'Modules Failed': ", ".join(student.failed_modules) if student.has_fail else "None",
             'level 5 Modules Used': level_5_modules_str,
-            'level 6 Modules Used': level_6_modules_str
         })
 
 print(f"\nResults saved to Task_1/student_results.csv")
