@@ -1,0 +1,49 @@
+======================================================================
+RAILWAY ROUTE PLANNING SYSTEM - OPTIMAL ROUTE
+======================================================================
+
+Total Cost: 464.00
+Number of stations in route: 39
+
+Detailed Route:
+----------------------------------------------------------------------
+    1. London
+    2. STEVENAGE
+    3. St Neots
+    4. Huntingdon
+    5. PETERBOROUGH
+    6. Grantham
+    7. Newark
+    8. Retford
+    9. DONCASTER
+   10. Goole
+   11. Brough
+   12. Goole
+   13. DONCASTER
+   14. Gainsborough
+   15. LINCOLN
+   16. Newark
+   17. NOTTINGHAM
+   18. Loughborough
+   19. LEICESTER
+   20. Hinckley
+   21. Nuneaton
+   22. COVENTRY
+   23. Leamington Spa
+   24. Banbury
+   25. OXFORD
+   26. Didcot Parkway
+   27. SWINDON
+   28. Bristol Parkway
+   29. BRISTOL TEMPLE MEADS
+   30. NEWPORT
+   31. CARDIFF CENTRAL
+   32. CARDIFF QUEEN STREET
+   33. CARDIFF CENTRAL
+   34. NEWPORT
+   35. Bristol Parkway
+   36. Cheltenham Spa
+   37. Longbridge
+   38. University
+   39. BIRMINGHAM NEW STREET
+======================================================================
