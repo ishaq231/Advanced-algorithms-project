@@ -6,6 +6,7 @@ Solves the Traveling Salesman Problem variant for railway cargo delivery
 from graph_model import RailwayNetwork
 from string_matcher import StationMatcher
 from dijkstra_alg import RouteOptimizer
+from route_visualizer import RouteVisualizer
 
 
 def main():
@@ -19,6 +20,7 @@ def main():
     # Initialize the station matcher and route optimizer
     matcher = StationMatcher(network.stations)
     optimizer = RouteOptimizer(network.graph, network.stations)
+    visualizer = RouteVisualizer(network.graph)
     
     # Interactive mode
     print("\n" + "="*70)
@@ -122,6 +124,29 @@ def main():
             
             if route:
                 optimizer.print_route_details(route, cost)
+
+                save_diagram = input("Create route diagram file? (y/n): ").strip().lower()
+                if save_diagram == 'y':
+                    diagram_name = input("Enter diagram filename (default: route_diagram.png): ").strip()
+                    if not diagram_name:
+                        diagram_name = "route_diagram.png"
+                    elif not diagram_name.endswith(".png"):
+                        diagram_name += ".png"
+
+                    try:
+                        output_file = visualizer.save_route_png(
+                            route,
+                            cost,
+                            diagram_name,
+                            start_station=start,
+                            end_station=end,
+                            intermediate_stations=intermediates,
+                        )
+                        print(f"Diagram saved to: {output_file}")
+                        print("Open this PNG image to view nodes, directed edges, and weights.")
+                    except Exception as error:
+                        print(f"Could not create diagram file: {error}")
+
                 save = input("\nSave route to file? (y/n): ").strip().lower()
                 if save == 'y':
                     name = input("Enter filename (default: route_output): ").strip()

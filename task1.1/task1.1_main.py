@@ -1,6 +1,6 @@
 from data_process import data_read, data_clean, get_module_names
 from utils import check_marks
-from student_model import Student
+from models import Student, Module
 import csv
 
 filepath = "task1.1/data/activity1_1_marks.csv"
@@ -17,7 +17,7 @@ print("Data read and cleaned successfully. Module names extracted.")
 
 # Open CSV file once and write incrementally
 with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
-    fieldnames = ['Student ID', 'Level 5 Average', 'Level 6 Average', 'Final Grade', 'Final Mark', 'Modules Failed', 'level 5 Modules Used', 'level 6 Modules Used']
+    fieldnames = ['Student ID', 'Level 5 Average', 'Level 6 Average', 'Final Grade', 'Final Mark', 'Modules Failed', 'level 5 Modules Used']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     
     # Write header once at the start
@@ -36,7 +36,8 @@ with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
             #print("Student ID:", str(student_id), "Module Code:", str(module_code), "Mark:", str(mark))
             if module_code in modules:
                 module_name = modules[module_code]
-                student.add_module(module_name, module_code, mark)
+                module = Module.from_code(module_code, module_name, mark)
+                student.add_module_instance(module)
         student.calculate_level_5_average() 
         #print(f"Student ID: {student_id}, Average: {average}, Total Credits: {credit}")
         student.calculate_level_6_average()
@@ -46,7 +47,6 @@ with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
         # Write result immediately to file
         # Format modules used with their marks: "Module Name (Mark%)"
         level_5_modules_str = ", ".join([f"{mod} ({mark}%)" for mod, mark in student.level_5_modules_used.items()])
-        level_6_modules_str = ", ".join([f"{mod} ({mark}%)" for mod, mark in student.level_6_modules_used.items()])
         
         writer.writerow({
             'Student ID': student_id,
@@ -56,7 +56,6 @@ with open('task1.1/student_results.csv', 'w', newline='') as csvfile:
             'Final Mark': round(student.final_mark, 1),
             'Modules Failed': ", ".join(student.failed_modules) if student.has_fail else "None",
             'level 5 Modules Used': level_5_modules_str,
-            'level 6 Modules Used': level_6_modules_str
         })
 
 print(f"\nResults saved to Task_1/student_results.csv")
