@@ -46,10 +46,9 @@ def process_single_image(args):
 
         # OPTIMIZATION: Get locations first, then pass them into encodings.
         # This prevents the library from running the heavy detection math twice!
-        # upsample_num_times=0 skips image upscaling for significantly faster detection.
-        face_locations = face_recognition.face_locations(unknown_image, upsample_num_times=0)
-        # model="small" uses a faster 5-point landmark model vs the default 68-point model.
-        unknown_encodings = face_recognition.face_encodings(unknown_image, known_face_locations=face_locations, model="small")
+        # upsample_num_times=1 skips image upscaling for significantly faster detection.
+        face_locations = face_recognition.face_locations(unknown_image)
+        unknown_encodings = face_recognition.face_encodings(unknown_image, known_face_locations=face_locations)
 
         for i, unknown_encoding in enumerate(unknown_encodings):
             # Compare the unknown face encoding with the known encoding
